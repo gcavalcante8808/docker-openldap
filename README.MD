@@ -48,6 +48,43 @@ User Notes
 ----------
 
 We plan to implement usefull features, like ldif reading during bootstraping, SSL Support and so On. Stay tunned in the github issues to more info.
+
+How to extend this image
+------------------------
+
+If you would like to do additional initilization in a image derived from this one, add one or more *.ldif files under */docker-entrypoint-initdb.d*. At the end of entrypoint (before it calls exec to throw slapd) it will verify the existence of the file /.configured; if the file is not present, then the files under the directory will be added using slappd utility.
+
+For example, to add an additional user and groups OU's that are defined in a custom.ldif file, add the following to /docker-entrypoint-initdb.d/custom.ldif:
+
+```
+    dn: ou=users,dc=example,dc=com
+    changetype: add
+    objectClass: organizationalUnit
+    objectClass: top
+    ou: users
+
+    dn: ou=groups,dc=example,dc=com
+    changetype: add
+    objectClass: organizationalUnit
+    objectClass: top
+    ou: groups
+```
+
+Then, create the following DockerFile:
+
+```
+    FROM gcavalcante8808/openldap
+    COPY custom.ldif /docker-entrypoint-initdb.d/custom.ldif
+```
+
+And build it:
+
+```
+    docker build -t myopenldap .
+```
+
+ 
+
 Author
 ------
 

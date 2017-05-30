@@ -69,15 +69,26 @@ EOT
 
     echo "Config File Created. Converting to OLC Format"
     slaptest -f /etc/openldap/slapd.conf -F /etc/openldap/slapd.d
-    
-    
+
 fi
 
 echo "Fixing slapd.d permissions"
 chown -R ldap:ldap ${LDAP_DB_DATA} /etc/openldap/slapd.d /var/run/openldap/
 chmod -R 700 ${LDAP_DB_DATA} /etc/openldap/slapd.d /var/run/openldap/
 
-# TOthen: Add SSL/TLS support
-# TOthen: Add plugins support
-# TOthen: Add initdb.d support for initial ldif files.
+if [ ! -f "/.configured" ]; then
+
+    for f in /docker-entrypoint-initdb.d/*; do
+	case "$f" in
+		*.ldif)   echo "$0: running $f"; slapadd -l "$f" -F /etc/openldap/slapd.d -d1 ;;
+		*)        echo "$0: ignoring $f" ;;
+	esac
+    echo
+    done
+    
+    touch /.configured
+fi
+
+# TODO: Add SSL/TLS support
+# TODO: Add plugins support
 exec slapd -F /etc/openldap/slapd.d -h ldap:/// -d ${LDAP_DEBUG_LEVEL}

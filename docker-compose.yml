@@ -1,0 +1,14 @@
+version: '2'
+volumes:
+  ldap-db:
+  ldap-conf:
+ 
+services:
+  ldap:
+    image: gcavalcante8808/openldap
+    restart: always
+    env_file:
+     - example.env
+    volumes:
+     - ldap-db:/var/lib/openldap
+     - ldap-conf:/etc/openldap
