@@ -12,3 +12,4 @@ services:
     volumes:
      - ldap-db:/var/lib/openldap
      - ldap-conf:/etc/openldap
+     - ./certs:/certs  

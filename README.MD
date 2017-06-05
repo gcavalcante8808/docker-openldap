@@ -16,6 +16,8 @@ Start a openldap instance
 This image includes EXPOSE 389 636 (the ldap and ldaps) ports, so standard container linking
 will make it automatically available to the linked containers. The default rootdn *cn=admin,dc=example,dc=com* (unless you defined LDAP_ADMIN_PRINCIPAL, check environment variables for more info) will be created with the password *LazyPass*.
 
+You can check defaults used by the docker-compose on the 'example.env' file. TLS support comes enabled by default using previously created certificates (**which shouldn't use in production environments**).
+
 Environment Variables
 ---------------------
 
@@ -83,7 +85,25 @@ And build it:
     docker build -t myopenldap .
 ```
 
- 
+TLS Support
+-----------
+
+If you want to add TLS Support to your LDAP Server, you can use the add_tls command already present on the image, but before, you need to define the following environment variables:
+
+ * LDAP_TLS_CA: path of the public certificate of the ca, eg. "/certs/ca.crt";
+ * LDAP_TLS_CERT: path of the public certificate of the server, eg. "/certs/server.crt";
+ * LDAP_TLS_KEY: path of the private key for the server certificate, eg. "/certs/server.key";
+
+All files must be readable by the ldap user (uid 100) and key MUST not have a password. With all environment variables set and the container created, use the following commando to add TLS support:
+
+```
+   docker exec <YOURCONTAINER> /docker-entrypoint.sh add_tls
+```
+
+Changing Configurations
+-----------------------
+
+To change configurations from "cn=config" OLC, you need to use the DN "cn=admin,cn=config" with the same password provided in the LDAP_ADMIN_PASSWORD environment variable.
 
 Author
 ------
