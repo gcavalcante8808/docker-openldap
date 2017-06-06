@@ -18,17 +18,25 @@ add_auditlog () {
 	. extra/add_auditlog.sh
 }
 
+prepare_repl () {
+	. extra/prepare_repl.sh
+}
+
 setUp () {
 	if [ -z "${LDAP_DB_DATA}" ]; then
 		echo "No DB Dir specified for openldap. Using /var/lib/openldap/openldap-data"
 		LDAP_DB_DATA="/var/lib/openldap/openldap-data"
 	fi
 
+	if [ -z "${LDAP_DOMAIN}" ]; then
+		echo "No Domain provided. Using example"
+		LDAP_DOMAIN="example"
+	fi
+	
 	if [ -z "${LDAP_SUFFIX}" ]; then
 		echo "No Suffix provided. Using dc=example,dc=com"
 		LDAP_SUFFIX="dc=example,dc=com"
 	fi
-
 	if [ -z "${LDAP_ADMIN_PRINCIPAL}" ]; then
 		echo "No Admin Provided. Using cn=admin as default"
 		LDAP_ADMIN_PRINCIPAL="cn=admin,${LDAP_SUFFIX}"
@@ -97,6 +105,15 @@ setUp () {
 	chown -R ldap:ldap ${LDAP_DB_DATA} /etc/openldap/slapd.d /var/run/openldap/
 	chmod -R 700 ${LDAP_DB_DATA} /etc/openldap/slapd.d /var/run/openldap/
 
+	echo "Creating Basic DC structure"
+	cat <<-EOT >/docker-entrypoint-initdb.d/dc.ldif
+		dn: $(echo ${LDAP_SUFFIX} | sed -e 's/\"//g')
+		dc: ${LDAP_DOMAIN}
+		objectClass: dcObject
+		objectClass: organization
+		o: ${LDAP_SUFFIX}
+	EOT
+
 	if [ ! -f "/.configured" ]; then
 
 		for f in /docker-entrypoint-initdb.d/*; do
@@ -119,7 +136,7 @@ run_slapd () {
 		setUp
 	fi
 	
-	exec slapd -F /etc/openldap/slapd.d -h ldap:/// -d ${LDAP_DEBUG_LEVEL}
+	exec slapd -F /etc/openldap/slapd.d -h ldap://${LDAP_ADDRESS}/ -d ${LDAP_DEBUG_LEVEL}
 }
 
 
@@ -145,12 +162,11 @@ case "$@" in
 	add_auditlog)
 		add_auditlog
 		;;
-	add_monitoring)
-		add_monitoring
+	prepare_repl)
+		prepare_repl
 		;;
 	*)
-		echo "Usage: $0 {run_slapd, setup, add_tls, add_repl, add_memberof, add_refint, add_auditlog}"
+		echo "Usage: $0 {run_slapd, setup, add_tls, add_repl, add_memberof, add_refint, add_auditlog, prepare_repl}"
 		exit 1
 		;;
 esac
-

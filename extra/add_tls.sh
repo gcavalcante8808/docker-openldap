@@ -17,7 +17,7 @@ if [[ ! -z ${LDAP_TLS_CA} && ! -z ${LDAP_TLS_CERT} && ! -z ${LDAP_TLS_KEY} ]]; t
 	EOT
 		
 	echo "Pulling ldif into cn=config"
-	ldapmodify -x -D "cn=admin,cn=config" -w ${LDAP_ADMIN_PASSWORD} -f /tmp/tls.ldif
+	ldapmodify -x -D "cn=admin,cn=config" -h ${LDAP_ADDRESS}  -w ${LDAP_ADMIN_PASSWORD} -f /tmp/tls.ldif
 	echo "Operation finished."
 
 fi

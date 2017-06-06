@@ -1,0 +1,23 @@
+version: '2'
+ 
+services:
+  ldap1:
+    image: gcavalcante8808/openldap
+    build: .
+    restart: always
+    env_file:
+     - ldap1.env
+    volumes:
+     - ./certs:/certs
+
+  ldap2:
+    image: gcavalcante8808/openldap
+    build: .
+    restart: always
+    env_file:
+     - ldap2.env
+    volumes:
+     - ./certs:/certs
+    depends_on:
+     - ldap1
+

@@ -24,6 +24,15 @@ Environment Variables
 The OpenLDAP image uses several environment variables which are easy to miss. While none of them is required,
 they may significantly help you in the directory configuration task.
 
+LDAP_ADDRESS
+
+This Environment variable is **NEEDED** to opendldap operate properly and (later) to use replication. Use a FQDN if possible.
+
+LDAP_DOMAIN
+
+This environment variable is recommended for you to use OpenLDAP Image. This environment variable sets the dc object available by default,
+and have a value like "example" if your domain is "example.com". The default domain is "example".
+
 LDAP_SUFFIX
 
 This environment variable is recommended for you to use OpenLDAP Image. This environment variable sets the suffix used by LDAP,
@@ -138,6 +147,50 @@ You can activate auditlog overlay by using the following command:
 ```
 
 All logs will be placed at /tmp. In this case, we recommend that you mount a volume into /tmp to avoid storagedriver overcharge and avoid data loss.
+
+Replication Information
+-----------------------
+
+To prepare your environments to replication through syncrepl, you need to define the following envinroment variables:
+
+ * LDAP_ID: LDAP RID of the current openldap instance. Numeric, normally something like 001, 002, etc;
+
+With this variable defined, use the following command to prepare your openldap to replication:
+
+```
+    docker exec <OPENLDAP_CONTAINER> /docker-entrypoint.sh prepare_repl
+```
+
+After this, to link replication between openldap servers, submit ldif files with information about new servers as normal. LDIF Example (Adding a 2nd server, which address is myserver2.com):
+
+idmapping.ldif
+```
+	dn: cn=config
+	changetype: modify
+	replace: olcServerID
+	olcServerID: 001 ldap://myserver1.com/
+	olcServerID: 002 ldap://myserver2.com/
+```
+
+syncreplconf.ldif
+```
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+add: olcSyncrepl
+olcSyncrepl: rid=001 provider=ldap://myserver1.com/ binddn="cn=admin,dc=example,dc=com
+ " bindmethod=simple credentials=teste searchbase="dc=example,dc=com" type=ref
+ reshAndPersist retry="5 5 300 5" timeout=1 rid=002 provider=ldap://myserver2.com/ bin
+ ddn="cn=admin,dc=example,dc=com" bindmethod=simple credentials=teste searchba
+ se="dc=example,dc=com" type=refreshAndPersist  retry="5 5 300 5" timeout=1
+```
+
+docker cp example.ldif <OPENLDAP_CONTAINER> /tmp/
+docker exec <OPENLDAP_CONTAINER> ldapmodify -x -D cn=admin,cn=root -w ${LDAP_ADMIN_PASSWORD} -f /tmp/idmapping.ldif
+docker exec <OPENLDAP_CONTAINER> ldapmodify -x -D cn=admin,cn=root -w ${LDAP_ADMIN_PASSWORD} -f /tmp/syncreplconf.ldif
+
+Check the logs to verify if the replication is working. More information at:
+
+https://www.openldap.org/doc/admin24/replication.html
 
 Changing Configurations
 -----------------------
