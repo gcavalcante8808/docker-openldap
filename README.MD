@@ -184,9 +184,11 @@ olcSyncrepl: rid=001 provider=ldap://myserver1.com/ binddn="cn=admin,dc=example,
  se="dc=example,dc=com" type=refreshAndPersist  retry="5 5 300 5" timeout=1
 ```
 
+```
 docker cp example.ldif <OPENLDAP_CONTAINER> /tmp/
 docker exec <OPENLDAP_CONTAINER> ldapmodify -x -D cn=admin,cn=root -w ${LDAP_ADMIN_PASSWORD} -f /tmp/idmapping.ldif
 docker exec <OPENLDAP_CONTAINER> ldapmodify -x -D cn=admin,cn=root -w ${LDAP_ADMIN_PASSWORD} -f /tmp/syncreplconf.ldif
+```
 
 Check the logs to verify if the replication is working. More information at:
 
