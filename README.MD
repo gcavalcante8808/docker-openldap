@@ -46,11 +46,6 @@ LDAP_DEBUG_LEVEL
 Used to define the debug level of the directory. By default it do not print too much messages (as stated in level 32768). For possible codes
 check the documentation at: http://www.openldap.org/doc/admin24/runningslapd.html
 
-User Notes
-----------
-
-We plan to implement usefull features, like ldif reading during bootstraping, SSL Support and so On. Stay tunned in the github issues to more info.
-
 How to extend this image
 ------------------------
 
@@ -99,6 +94,50 @@ All files must be readable by the ldap user (uid 100) and key MUST not have a pa
 ```
    docker exec <YOURCONTAINER> /docker-entrypoint.sh add_tls
 ```
+
+Groceries
+---------
+
+There is some sweet resource available for those want to be productive :D
+
+All resources presented here **are not idempotent**; you just need to activate 'em once. If you try to activate more than once, the ldap server will return errors.
+
+The Overlays presented here have additional information available at: http://www.openldap.org/doc/admin24/overlays.html.
+
+For now, we have support to 'activate' the following overlays/configurations using our entrypoint script:
+
+**MemberOf Overlay**
+
+Usefull to discover from what groups a user is a member (its the reverse of the GroupOfNames).
+
+You can activate the memberof overlay by using the following command:
+
+```
+    docker exec <OPENLDAP_CONTAINER> /docker-entrypoint.sh add_memberof
+```
+
+
+**RefInt Overlay**
+
+Update your groups when a dn is removed or updated automagically.
+
+You can activate refint overlay by using the following command:
+
+```
+    docker exec <OPENLDAP_CONTAINER> /docker-entrypoint.sh add_refint
+```
+
+**AuditLog**
+
+Some usefull logs for your config and main databases.
+
+You can activate auditlog overlay by using the following command:
+
+```
+    docker exec <OPENLDAP_CONTAINER> /docker-entrypoint.sh add_auditlog
+```
+
+All logs will be placed at /tmp. In this case, we recommend that you mount a volume into /tmp to avoid storagedriver overcharge and avoid data loss.
 
 Changing Configurations
 -----------------------

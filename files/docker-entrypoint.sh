@@ -6,6 +6,18 @@ add_tls () {
 	. extra/add_tls.sh
 }
 
+add_memberof () {
+	. extra/add_memberof.sh
+}
+
+add_refint () {
+	. extra/add_refint.sh
+}
+
+add_auditlog () {
+	. extra/add_auditlog.sh
+}
+
 setUp () {
 	if [ -z "${LDAP_DB_DATA}" ]; then
 		echo "No DB Dir specified for openldap. Using /var/lib/openldap/openldap-data"
@@ -124,8 +136,20 @@ case "$@" in
 	add_repl)
 		add_repl
 		;;
+	add_memberof)
+		add_memberof
+		;;
+	add_refint)
+		add_refint
+		;;
+	add_auditlog)
+		add_auditlog
+		;;
+	add_monitoring)
+		add_monitoring
+		;;
 	*)
-		echo "Usage: $0 {run_slapd, setup, add_tls, add_repl}"
+		echo "Usage: $0 {run_slapd, setup, add_tls, add_repl, add_memberof, add_refint, add_auditlog}"
 		exit 1
 		;;
 esac
