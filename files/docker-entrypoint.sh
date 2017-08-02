@@ -135,7 +135,7 @@ run_slapd () {
 	if [ ! -d "/etc/openldap/slapd.d" ]; then
 		setUp
 	fi
-	
+        ulimit -n 1024	
 	exec slapd -F /etc/openldap/slapd.d -h ldap://${LDAP_ADDRESS}/ -d ${LDAP_DEBUG_LEVEL}
 }
 
