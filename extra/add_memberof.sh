@@ -4,7 +4,7 @@ set -e
 
 
 LDIF_FILE="/tmp/memberof.ldif"
-if [[ ! -z ${LDAP_TLS_CA} && ! -z ${LDAP_TLS_CERT} && ! -z ${LDAP_TLS_KEY} ]]; then
+if [[ ! -f ${LDIF_FILE} ]]; then
    	echo "Creating LDIF File"
 	cat <<-EOT > ${LDIF_FILE}
 		dn: cn=module,cn=config
