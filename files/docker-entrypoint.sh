@@ -23,6 +23,11 @@ prepare_repl () {
 }
 
 setUp () {
+	if [ -z "${LDAP_ADDRESS}" ]; then
+		echo "No Ldap Address specified. Assuming localhost"
+		LDAP_ADDRESS=localhost
+	fi
+
 	if [ -z "${LDAP_DB_DATA}" ]; then
 		echo "No DB Dir specified for openldap. Using /var/lib/openldap/openldap-data"
 		LDAP_DB_DATA="/var/lib/openldap/openldap-data"
