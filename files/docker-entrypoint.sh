@@ -150,7 +150,7 @@ case "$@" in
 		run_slapd
 		;;
 	setup)
-		setup
+		setUp
 		;;
 	add_tls)
 		add_tls
