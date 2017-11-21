@@ -2,9 +2,6 @@
 
 set -e
 
-if [[ ! -z ${LDAP_TLS_CA} && ! -z ${LDAP_TLS_CERT} && ! -z ${LDAP_TLS_KEY} ]]; then
-	TMPFILE=$1
-	echo "Pulling stdin into cn=config"
-	ldapadd -x -D "cn=admin,cn=config" -h ${LDAP_ADDRESS}  -w ${LDAP_ADMIN_PASSWORD} -f $1
-	echo "Operation finished."
-fi
+echo "Pulling stdin into cn=config"
+ldapadd -x -D "cn=admin,cn=config" -h ${LDAP_ADDRESS}  -w ${LDAP_ADMIN_PASSWORD} -f $1
+echo "Operation finished."
