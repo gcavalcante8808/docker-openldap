@@ -89,6 +89,18 @@ And build it:
     docker build -t myopenldap .
 ```
 
+Directory Admin Operations
+--------------------------
+
+If you want to pull configuration into the directory (everything under cn=config) you can copy your ldif to the container and then use the following shortcut:
+
+```
+docker cp my.ldif <CONTAINER>:/my.ldif
+docker exec <CONTAINER> /extra/add_config /my.ldif
+```
+
+Where "<CONTAINER>" is the name or id of the container; in truth, `add_config` is just a ldapadd shortcut with cn=admin,cn=config privileges. Use with caution.
+
 TLS Support
 -----------
 

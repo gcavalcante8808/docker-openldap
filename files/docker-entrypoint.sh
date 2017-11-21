@@ -18,6 +18,10 @@ add_auditlog () {
 	. extra/add_auditlog.sh
 }
 
+add_config () {
+        . extra/add_config.sh
+}
+
 prepare_repl () {
 	. extra/prepare_repl.sh
 }
@@ -167,11 +171,14 @@ case "$@" in
 	add_auditlog)
 		add_auditlog
 		;;
+        add_config)
+                add_config
+                ;;
 	prepare_repl)
 		prepare_repl
 		;;
 	*)
-		echo "Usage: $0 {run_slapd, setup, add_tls, add_repl, add_memberof, add_refint, add_auditlog, prepare_repl}"
+		echo "Usage: $0 {run_slapd, setup, add_tls, add_repl, add_memberof, add_refint, add_auditlog, add_config, prepare_repl}"
 		exit 1
 		;;
 esac
