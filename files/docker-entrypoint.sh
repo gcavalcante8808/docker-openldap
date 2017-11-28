@@ -98,6 +98,8 @@ setUp () {
 	rootpw      $(slappasswd -s ${LDAP_ADMIN_PASSWORD})
 	directory   /var/lib/openldap/openldap-data
 	index   objectClass eq
+	index   uid eq
+	index   cn eq
 
 	database    config
 	rootdn      "cn=admin,cn=config"
@@ -145,7 +147,7 @@ run_slapd () {
 		setUp
 	fi
         ulimit -n 1024	
-	exec slapd -F /etc/openldap/slapd.d -h ldap://${LDAP_ADDRESS}/ -d ${LDAP_DEBUG_LEVEL}
+	exec slapd -F /etc/openldap/slapd.d -h ldap:/// -d ${LDAP_DEBUG_LEVEL}
 }
 
 
