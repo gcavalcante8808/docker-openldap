@@ -12,7 +12,7 @@ setid () {
 	EOT
 	
 	echo "Define Server ID as ${LDAP_ID}"
-	ldapadd -x -D "cn=admin,cn=config" -h ${LDAP_ADDRESS} -w ${LDAP_ADMIN_PASSWORD} -f ${LDIF_FILE}
+	ldapadd -x -D "cn=admin,cn=config" -w ${LDAP_ADMIN_PASSWORD} -f ${LDIF_FILE}
 	echo "Operation finished."
 }
 
@@ -27,7 +27,7 @@ load_syncprov () {
 	EOT
 	
 	echo "Loading SyncProv Module"
-	ldapadd -x -D "cn=admin,cn=config" -h ${LDAP_ADDRESS} -w ${LDAP_ADMIN_PASSWORD} -f ${LDIF_FILE}
+	ldapadd -x -D "cn=admin,cn=config" -w ${LDAP_ADMIN_PASSWORD} -f ${LDIF_FILE}
 	echo "Operation finished."
 }
 
@@ -41,7 +41,7 @@ enable_syncprov () {
 	EOT
 	
 	echo "Enabling SyncProv Module"
-	ldapadd -x -D "cn=admin,cn=config" -h ${LDAP_ADDRESS} -w ${LDAP_ADMIN_PASSWORD} -f ${LDIF_FILE}
+	ldapadd -x -D "cn=admin,cn=config" -w ${LDAP_ADMIN_PASSWORD} -f ${LDIF_FILE}
 	echo "Operation finished."
 	
 }
@@ -56,7 +56,7 @@ map_rid () {
 	EOT
 	
 	echo "Mapping RID ${LDAP_ID} to ${LDAP_ADDRESS}"
-	ldapadd -x -D "cn=admin,cn=config" -h ${LDAP_ADDRESS} -w ${LDAP_ADMIN_PASSWORD} -f ${LDIF_FILE}
+	ldapadd -x -D "cn=admin,cn=config" -w ${LDAP_ADMIN_PASSWORD} -f ${LDIF_FILE}
 	echo "Operation finished."
 	
 }

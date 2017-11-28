@@ -27,7 +27,7 @@ if [[ ! -f ${LDIF_FILE} ]]; then
 	EOT
 		
 	echo "Pulling ldif into cn=config"
-	ldapadd -x -D "cn=admin,cn=config" -h ${LDAP_ADDRESS} -w ${LDAP_ADMIN_PASSWORD} -f ${LDIF_FILE}
+	ldapadd -x -D "cn=admin,cn=config" -w ${LDAP_ADMIN_PASSWORD} -f ${LDIF_FILE}
 	echo "Operation finished."
 
 fi
