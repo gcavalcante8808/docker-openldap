@@ -63,7 +63,7 @@ setUp () {
 
 	if [ ! -d /etc/openldap/slapd.d ]; then
 		echo "Slapd.d directory not founding. Bootstraping one ... "
-		mkdir -p /etc/openldap/slapd.d
+		mkdir -p /etc/openldap/slapd.d /run/openldap/
 		
 		echo "Creating DB Files"
 		slapd -V

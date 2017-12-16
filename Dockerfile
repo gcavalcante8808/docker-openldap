@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:3.6
 RUN apk add --no-cache openldap-clients openldap bash && \
     mkdir /docker-entrypoint-initdb.d/
 COPY files/docker-entrypoint.sh /
