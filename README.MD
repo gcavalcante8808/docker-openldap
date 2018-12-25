@@ -206,6 +206,24 @@ Check the logs to verify if the replication is working. More information at:
 
 https://www.openldap.org/doc/admin24/replication.html
 
+K8s Considerations
+------------------
+
+If you need to use the image with Kubernetes, ensure to declare a pre-init container to use the `copy-to-volume.sh` script to copy openldap files into the target volume:
+
+```
+    spec:
+      initContainers:
+        - name: config-data
+          image: gcavalcante8808/openldap
+          command: ["/copy-ldap-data-to-volume.sh"]
+          volumeMounts:
+          - mountPath: /data
+            name: ldap-conf
+```
+
+The volume used to hold the openldap data should mounted in the `/data` folder.
+
 Changing Configurations
 -----------------------
 
