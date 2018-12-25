@@ -125,7 +125,7 @@ setUp () {
 		o: ${LDAP_SUFFIX}
 	EOT
 
-	if [ ! -f "/.configured" ]; then
+	if [ ! -f "/etc/openldap/.configured" ]; then
 
 		for f in /docker-entrypoint-initdb.d/*; do
 		case "$f" in
@@ -135,7 +135,7 @@ setUp () {
 		echo
 		done
 	 
-		touch /.configured
+		touch /etc/openldap/.configured
 	fi
 
 	# TODO: Add plugins support
