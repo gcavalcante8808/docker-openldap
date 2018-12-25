@@ -1,0 +1,92 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f ../docker-compose.yml
+    kompose.version: 1.17.0 (a74acad)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ldap
+  name: ldap
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        io.kompose.service: ldap
+    spec:
+      initContainers:
+        - name: config-data
+          image: gcavalcante8808/openldap
+          imagePullPolicy: Always
+          command: ["bash","-x","/copy-ldap-data-to-volume.sh"]
+          volumeMounts:
+          - mountPath: /data
+            name: ldap-conf
+          - mountPath: /ldap-db-data
+            name: ldap-db            
+      containers:
+      - env:
+        - name: LDAP_ADDRESS
+          valueFrom:
+            configMapKeyRef:
+              key: LDAP_ADDRESS
+              name: ldap-cm-env
+        - name: LDAP_ADMIN_PASSWORD
+          valueFrom:
+            configMapKeyRef:
+              key: LDAP_ADMIN_PASSWORD
+              name: ldap-cm-env
+        - name: LDAP_ADMIN_PRINCIPAL
+          valueFrom:
+            configMapKeyRef:
+              key: LDAP_ADMIN_PRINCIPAL
+              name: ldap-cm-env
+        - name: LDAP_DEBUG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              key: LDAP_DEBUG_LEVEL
+              name: ldap-cm-env
+        - name: LDAP_DOMAIN
+          valueFrom:
+            configMapKeyRef:
+              key: LDAP_DOMAIN
+              name: ldap-cm-env
+        - name: LDAP_ID
+          valueFrom:
+            configMapKeyRef:
+              key: LDAP_ID
+              name: ldap-cm-env
+        - name: LDAP_SUFFIX
+          valueFrom:
+            configMapKeyRef:
+              key: LDAP_SUFFIX
+              name: ldap-cm-env
+        image: gcavalcante8808/openldap
+        imagePullPolicy: Always
+        name: ldap
+        ports:
+        - containerPort: 389
+        resources: {}
+        volumeMounts:
+        - mountPath: /var/lib/openldap/openldap-data
+          name: ldap-db
+        - mountPath: /etc/openldap
+          name: ldap-conf
+        - mountPath: /docker-entrypoint-initdb.d/users.ldif
+          name: initial-data
+      restartPolicy: Always
+      volumes:
+      - name: ldap-db
+        persistentVolumeClaim:
+          claimName: ldap-pvc-db
+      - name: ldap-conf
+        persistentVolumeClaim:
+          claimName: ldap-pvc-conf
+      - name: initial-data
+        configMap:
+          name: ldap-cm-default-user
+status: {}

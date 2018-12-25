@@ -229,6 +229,11 @@ Changing Configurations
 
 To change configurations from "cn=config" OLC, you need to use the DN "cn=admin,cn=config" with the same password provided in the LDAP_ADMIN_PASSWORD environment variable.
 
+K8S Support
+-----------
+
+The K8S folder have an working deployment/service that is roughly mapped the docker-compose.yaml. The `ldap-cm-env.yaml` have the default configuration for the openldap including main admin.
+
 Author
 ------
 

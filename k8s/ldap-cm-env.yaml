@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  LDAP_ADDRESS: ldap
+  LDAP_ADMIN_PASSWORD: teste
+  LDAP_ADMIN_PRINCIPAL: cn=admin,dc=example,dc=com
+  LDAP_DEBUG_LEVEL: "1"
+  LDAP_DOMAIN: example
+  LDAP_ID: "1"
+  LDAP_SUFFIX: dc=example,dc=com
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ldap-cm-env
+  name: ldap-cm-env
